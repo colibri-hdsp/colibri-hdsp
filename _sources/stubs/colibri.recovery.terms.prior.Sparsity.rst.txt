@@ -1,0 +1,15 @@
+﻿Sparsity
+========
+
+.. currentmodule:: colibri.recovery.terms.prior
+
+.. autoclass:: Sparsity
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.recovery.terms.prior.Sparsity:
+
+.. minigallery:: colibri.recovery.terms.prior.Sparsity
+    :add-heading: Examples using ``Sparsity``:

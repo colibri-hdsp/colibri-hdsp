@@ -1,0 +1,9 @@
+﻿backward\_dd\_cassi
+===================
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: backward_dd_cassi
+
+.. minigallery:: colibri.optics.functional.backward_dd_cassi
+    :add-heading: Examples using ``backward_dd_cassi``:

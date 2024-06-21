@@ -1,0 +1,9 @@
+﻿forward\_spc
+============
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: forward_spc
+
+.. minigallery:: colibri.optics.functional.forward_spc
+    :add-heading: Examples using ``forward_spc``:

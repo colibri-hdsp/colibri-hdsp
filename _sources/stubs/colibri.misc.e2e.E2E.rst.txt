@@ -1,0 +1,15 @@
+﻿E2E
+===
+
+.. currentmodule:: colibri.misc.e2e
+
+.. autoclass:: E2E
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.misc.e2e.E2E:
+
+.. minigallery:: colibri.misc.e2e.E2E
+    :add-heading: Examples using ``E2E``:

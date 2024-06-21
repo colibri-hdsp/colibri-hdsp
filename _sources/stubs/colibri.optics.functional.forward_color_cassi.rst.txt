@@ -1,0 +1,9 @@
+﻿forward\_color\_cassi
+=====================
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: forward_color_cassi
+
+.. minigallery:: colibri.optics.functional.forward_color_cassi
+    :add-heading: Examples using ``forward_color_cassi``:

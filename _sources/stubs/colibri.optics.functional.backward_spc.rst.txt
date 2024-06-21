@@ -1,0 +1,9 @@
+﻿backward\_spc
+=============
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: backward_spc
+
+.. minigallery:: colibri.optics.functional.backward_spc
+    :add-heading: Examples using ``backward_spc``:

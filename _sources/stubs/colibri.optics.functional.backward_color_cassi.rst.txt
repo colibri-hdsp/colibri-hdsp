@@ -1,0 +1,9 @@
+﻿backward\_color\_cassi
+======================
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: backward_color_cassi
+
+.. minigallery:: colibri.optics.functional.backward_color_cassi
+    :add-heading: Examples using ``backward_color_cassi``:

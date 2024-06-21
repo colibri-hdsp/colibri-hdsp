@@ -1,0 +1,15 @@
+﻿SPC
+===
+
+.. currentmodule:: colibri.optics.spc
+
+.. autoclass:: SPC
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.optics.spc.SPC:
+
+.. minigallery:: colibri.optics.spc.SPC
+    :add-heading: Examples using ``SPC``:

@@ -1,0 +1,15 @@
+﻿DCT2D
+=====
+
+.. currentmodule:: colibri.recovery.transforms
+
+.. autoclass:: DCT2D
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.recovery.transforms.DCT2D:
+
+.. minigallery:: colibri.recovery.transforms.DCT2D
+    :add-heading: Examples using ``DCT2D``:

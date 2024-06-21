@@ -1,0 +1,15 @@
+﻿Activation
+==========
+
+.. currentmodule:: colibri.models.custom_layers
+
+.. autoclass:: Activation
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.models.custom_layers.Activation:
+
+.. minigallery:: colibri.models.custom_layers.Activation
+    :add-heading: Examples using ``Activation``:

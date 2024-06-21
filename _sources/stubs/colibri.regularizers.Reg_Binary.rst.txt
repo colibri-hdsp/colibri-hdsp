@@ -1,0 +1,15 @@
+﻿Reg\_Binary
+===========
+
+.. currentmodule:: colibri.regularizers
+
+.. autoclass:: Reg_Binary
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.regularizers.Reg_Binary:
+
+.. minigallery:: colibri.regularizers.Reg_Binary
+    :add-heading: Examples using ``Reg_Binary``:

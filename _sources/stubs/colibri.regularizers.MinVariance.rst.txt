@@ -1,0 +1,15 @@
+﻿MinVariance
+===========
+
+.. currentmodule:: colibri.regularizers
+
+.. autoclass:: MinVariance
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.regularizers.MinVariance:
+
+.. minigallery:: colibri.regularizers.MinVariance
+    :add-heading: Examples using ``MinVariance``:

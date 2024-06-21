@@ -1,0 +1,15 @@
+﻿upBlockNoSkip
+=============
+
+.. currentmodule:: colibri.models.custom_layers
+
+.. autoclass:: upBlockNoSkip
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.models.custom_layers.upBlockNoSkip:
+
+.. minigallery:: colibri.models.custom_layers.upBlockNoSkip
+    :add-heading: Examples using ``upBlockNoSkip``:

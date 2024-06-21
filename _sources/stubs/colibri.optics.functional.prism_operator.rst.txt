@@ -1,0 +1,9 @@
+﻿prism\_operator
+===============
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: prism_operator
+
+.. minigallery:: colibri.optics.functional.prism_operator
+    :add-heading: Examples using ``prism_operator``:

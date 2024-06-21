@@ -1,0 +1,15 @@
+﻿C\_CASSI
+========
+
+.. currentmodule:: colibri.optics.cassi
+
+.. autoclass:: C_CASSI
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.optics.cassi.C_CASSI:
+
+.. minigallery:: colibri.optics.cassi.C_CASSI
+    :add-heading: Examples using ``C_CASSI``:

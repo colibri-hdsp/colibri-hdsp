@@ -1,0 +1,15 @@
+﻿Correlation
+===========
+
+.. currentmodule:: colibri.regularizers
+
+.. autoclass:: Correlation
+    :members:
+    :show-inheritance:
+    :no-undoc-members:
+    :special-members: __mul__, __add__, __div__, __neg__, __sub__, __truediv__
+
+.. _sphx_glr_backref_colibri.regularizers.Correlation:
+
+.. minigallery:: colibri.regularizers.Correlation
+    :add-heading: Examples using ``Correlation``:

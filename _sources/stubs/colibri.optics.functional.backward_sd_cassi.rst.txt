@@ -1,0 +1,9 @@
+﻿backward\_sd\_cassi
+===================
+
+.. currentmodule:: colibri.optics.functional
+
+.. autofunction:: backward_sd_cassi
+
+.. minigallery:: colibri.optics.functional.backward_sd_cassi
+    :add-heading: Examples using ``backward_sd_cassi``:
