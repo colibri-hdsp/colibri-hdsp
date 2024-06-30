@@ -172,10 +172,10 @@ def forward_spc(x, H):
     y = torch.bmm(H, x)
     return y
 
-def backward_spc(y, H):
+def backward_spc(y, H, pinv=False):
     r"""
 
-    Inverse operation to reconsstruct the image from measurements.
+    Inverse operation to reconstruct the image from measurements.
 
     For more information refer to: Optimized Sensing Matrix for Single Pixel Multi-Resolution Compressive Spectral Imaging  10.1109/TIP.2020.2971150
 
@@ -186,8 +186,8 @@ def backward_spc(y, H):
         torch.Tensor: Reconstructed image tensor of size (B, L, M, N).
     """
 
-    Hinv = torch.pinverse(H)
-    Hinv = Hinv.unsqueeze(0).repeat(y.shape[0], 1, 1)
+    Hinv   = torch.pinverse(H) if pinv else torch.transpose(H, 0, 1)
+    Hinv   = Hinv.unsqueeze(0).repeat(y.shape[0], 1, 1)
 
     x = torch.bmm(Hinv, y)
     x = x.permute(0, 2, 1)

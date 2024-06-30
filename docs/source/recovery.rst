@@ -21,6 +21,16 @@ List of Algorithms
     colibri.recovery.fista.Fista
     
 
+List of Solvers
+--------------------
+
+.. autosummary::
+    :toctree: stubs
+    :template: class_template.rst
+    :nosignatures:
+
+    colibri.recovery.solvers.core.LinearSolver
+    colibri.recovery.solvers.spc.SPCSolver
 
 
 Fidelity Terms
@@ -62,4 +72,4 @@ The module contains differents signal transforms that can be used in the recover
     :template: class_template.rst
     :nosignatures:
 
-    colibri.recovery.transforms.DCT2D
+    colibri.recovery.terms.transforms.DCT2D

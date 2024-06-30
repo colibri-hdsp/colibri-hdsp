@@ -50,21 +50,8 @@ acquisition_name = 'spc' #  ['spc', 'cassi']
 # Visualize dataset
 # -----------------------------------------------
 from torchvision.utils import make_grid
-from colibri.recovery.transforms import DCT2D
 
 sample = next(iter(dataset.train_dataset))[0]
-
-
-# %%
-
-
-transform_dct = DCT2D()
-
-theta = transform_dct.forward(sample)
-x_hat = transform_dct.inverse(theta)
-
-error = torch.norm(sample - x_hat)
-print("Error: ", error  )
 
 
 # %%
@@ -80,16 +67,18 @@ acquisition_config = dict(
 )
 
 if acquisition_name == 'spc':
-    n_measurements  = 25**2 
+    n_measurements  = 31**2 
     n_measurements_sqrt = int(math.sqrt(n_measurements))    
     acquisition_config['n_measurements'] = n_measurements
 
 acquisition_model = {
-    'spc': SPC(**acquisition_config),
-    'sd_cassi': SD_CASSI(**acquisition_config),
-    'dd_cassi': DD_CASSI(**acquisition_config),
-    'c_cassi': C_CASSI(**acquisition_config)
+    'spc': SPC,
+    'sd_cassi': SD_CASSI,
+    'dd_cassi': DD_CASSI,
+    'c_cassi': C_CASSI
 }[acquisition_name]
+
+acquisition_model = acquisition_model(**acquisition_config)
 
 y = acquisition_model(sample)
 
@@ -97,25 +86,27 @@ y = acquisition_model(sample)
 from colibri.recovery.fista import Fista
 from colibri.recovery.terms.prior import Sparsity
 from colibri.recovery.terms.fidelity import L2
-from colibri.recovery.transforms import DCT2D
+from colibri.recovery.terms.transforms import DCT2D
 
 algo_params = {
-    'max_iter': 200,
+    'max_iters': 2000,
     'alpha': 1e-4,
-    'lambda': 0.001,
-    'tol': 1e-3
+    '_lambda': 0.01,
 }
 
 
 
-fidelity = L2()
-prior = Sparsity()
-transform = DCT2D()
+fidelity  = L2()
+prior     = Sparsity(basis='dct')
 
-fista = Fista(fidelity, prior, acquisition_model, algo_params, transform)
+fista = Fista(fidelity, prior, acquisition_model, **algo_params)
 
 x0 = acquisition_model.forward(y, type_calculation="backward")
 x_hat = fista(y, x0=x0 ) 
+
+basis = DCT2D()
+
+theta = basis.forward(x_hat).detach()
 
 print(x_hat.shape)
 

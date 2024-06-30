@@ -56,7 +56,7 @@ dataset_path = 'cifar10'
 keys = ''
 batch_size = 128
 dataset = Dataset(dataset_path, keys, batch_size)
-adquistion_name = 'c_cassi' #  ['spc', 'cassi']
+acquisition_name = 'c_cassi' #  ['spc', 'cassi']
 
 
 # %%
@@ -90,21 +90,23 @@ acquisition_config = dict(
     input_shape = img_size,
 )
 
-if adquistion_name == 'spc':
+if acquisition_name == 'spc':
     n_measurements  = 256 
     n_measurements_sqrt = int(math.sqrt(n_measurements))    
     acquisition_config['n_measurements'] = n_measurements
 
 acquisition_model = {
-    'spc': SPC(**acquisition_config),
-    'sd_cassi': SD_CASSI(**acquisition_config),
-    'dd_cassi': DD_CASSI(**acquisition_config),
-    'c_cassi': C_CASSI(**acquisition_config)
-}[adquistion_name]
+    'spc': SPC,
+    'sd_cassi': SD_CASSI,
+    'dd_cassi': DD_CASSI,
+    'c_cassi': C_CASSI
+}[acquisition_name]
+
+acquisition_model = acquisition_model(**acquisition_config)
 
 y = acquisition_model(sample)
 
-if adquistion_name == 'spc':
+if acquisition_name == 'spc':
     y = y.reshape(y.shape[0], -1, n_measurements_sqrt, n_measurements_sqrt)
 
 img = make_grid(y[:32], nrow=8, padding=1, normalize=True, scale_each=False, pad_value=0)
@@ -112,7 +114,7 @@ img = make_grid(y[:32], nrow=8, padding=1, normalize=True, scale_each=False, pad
 plt.figure(figsize=(10,10))
 plt.imshow(img.permute(1, 2, 0))
 plt.axis('off')
-plt.title(f'{adquistion_name.upper()} measurements')
+plt.title(f'{acquisition_name.upper()} measurements')
 plt.show()
 
 
@@ -193,7 +195,7 @@ results = train_schedule.fit(
 x_est = model(sample.to(device)).cpu()
 y = acquisition_model(sample.to(device)).cpu()
 
-if adquistion_name == 'spc':
+if acquisition_name == 'spc':
     y = y.reshape(y.shape[0], -1, n_measurements_sqrt, n_measurements_sqrt)
 
 img      = make_grid(sample[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
@@ -202,7 +204,7 @@ img_y    = make_grid(y[:16], nrow=4, padding=1, normalize=True, scale_each=False
 
 imgs_dict = {
     "CIFAR10 dataset": img, 
-    f"{adquistion_name.upper()} measurements": img_y,
+    f"{acquisition_name.upper()} measurements": img_y,
     "Recons CIFAR10": img_est
 }
 
@@ -215,9 +217,9 @@ for i, (title, img) in enumerate(imgs_dict.items()):
     plt.axis('off')
 
 ca = acquisition_model.learnable_optics.cpu().detach().numpy().squeeze()
-if adquistion_name == 'spc':
+if acquisition_name == 'spc':
     ca = ca = ca.reshape(n_measurements, 32, 32, 1)[0]
-elif adquistion_name == 'c_cassi':
+elif acquisition_name == 'c_cassi':
     ca = ca.transpose(1, 2, 0)
 plt.subplot(1, 4, 4)
 plt.imshow(ca, cmap='gray')
