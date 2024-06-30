@@ -77,7 +77,7 @@ class Training:
             tq.update(1)
             # Every data instance is an input + outputs pair
 
-            inputs, _ = data
+            inputs = data['input']
             outputs_gt = inputs.clone()
             inputs = inputs.to(self.device)
             outputs_gt = outputs_gt.to(self.device)

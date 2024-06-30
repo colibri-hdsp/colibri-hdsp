@@ -7,14 +7,18 @@ Demo Algorithms.
 # %%
 # Select Working Directory and Device
 # -----------------------------------------------
-import os 
+import os
+
+from torch.utils import data
+
 os.chdir(os.path.dirname(os.getcwd()))
-print("Current Working Directory " , os.getcwd())
+print("Current Working Directory ", os.getcwd())
 
 import sys
+
 sys.path.append(os.path.join(os.getcwd()))
 
-#General imports
+# General imports
 import matplotlib.pyplot as plt
 import torch
 import os
@@ -31,29 +35,30 @@ if manual_device:
 else:
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
 # %%
 # Load dataset
 # -----------------------------------------------
-from colibri.data.datasets import Dataset
+from colibri.data.datasets import CustomDataset
 
-dataset_path = 'cifar10'
-keys = ''
+name = 'cifar10'
+path = '.'
 batch_size = 1
-dataset = Dataset(dataset_path, keys, batch_size)
-acquisition_name = 'spc' #  ['spc', 'cassi']
 
+builtin_dict = dict(train=True, download=True)
+dataset = CustomDataset(name, path,
+                        builtin_dict=builtin_dict,
+                        transform_dict=None)
 
-
+acquisition_name = 'spc'  # ['spc', 'cassi']
 
 # %%
 # Visualize dataset
 # -----------------------------------------------
-from torchvision.utils import make_grid
+
 from colibri.recovery.transforms import DCT2D
 
-sample = next(iter(dataset.train_dataset))[0]
-
+sample = dataset[0]['input']
+sample = sample.unsqueeze(0).to(device)
 
 # %%
 
@@ -64,8 +69,7 @@ theta = transform_dct.forward(sample)
 x_hat = transform_dct.inverse(theta)
 
 error = torch.norm(sample - x_hat)
-print("Error: ", error  )
-
+print("Error: ", error)
 
 # %%
 # Optics forward model
@@ -76,12 +80,12 @@ from colibri.optics import SPC, SD_CASSI, DD_CASSI, C_CASSI
 img_size = sample.shape[1:]
 
 acquisition_config = dict(
-    input_shape = img_size,
+    input_shape=img_size,
 )
 
 if acquisition_name == 'spc':
-    n_measurements  = 25**2 
-    n_measurements_sqrt = int(math.sqrt(n_measurements))    
+    n_measurements = 25 ** 2
+    n_measurements_sqrt = int(math.sqrt(n_measurements))
     acquisition_config['n_measurements'] = n_measurements
 
 acquisition_model = {
@@ -106,8 +110,6 @@ algo_params = {
     'tol': 1e-3
 }
 
-
-
 fidelity = L2()
 prior = Sparsity()
 transform = DCT2D()
@@ -115,39 +117,37 @@ transform = DCT2D()
 fista = Fista(fidelity, prior, acquisition_model, algo_params, transform)
 
 x0 = acquisition_model.forward(y, type_calculation="backward")
-x_hat = fista(y, x0=x0 ) 
+x_hat = fista(y, x0=x0)
 
 print(x_hat.shape)
 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10, 10))
 
-plt.subplot(1,4,1)
+plt.subplot(1, 4, 1)
 plt.title('Reference')
-plt.imshow(sample[0,:,:].permute(1, 2, 0), cmap='gray')
+plt.imshow(sample[0, :, :].permute(1, 2, 0), cmap='gray')
 plt.xticks([])
 plt.yticks([])
 
-plt.subplot(1,4,2)
+plt.subplot(1, 4, 2)
 plt.title('Sparse Representation')
-plt.imshow(abs(theta[0,:,:]).permute(1, 2, 0), cmap='gray')
+plt.imshow(abs(theta[0, :, :]).permute(1, 2, 0), cmap='gray')
 plt.xticks([])
 plt.yticks([])
-
 
 if acquisition_name == 'spc':
     y = y.reshape(y.shape[0], -1, n_measurements_sqrt, n_measurements_sqrt)
 
-
-plt.subplot(1,4,3)
+plt.subplot(1, 4, 3)
 plt.title('Measurement')
-plt.imshow(y[0,:,:].permute(1, 2, 0), cmap='gray')
+plt.imshow(y[0, :, :].permute(1, 2, 0), cmap='gray')
 plt.xticks([])
 plt.yticks([])
 
-plt.subplot(1,4,4)
+plt.subplot(1, 4, 4)
 plt.title('Reconstruction')
 x_hat -= x_hat.min()
 x_hat /= x_hat.max()
-plt.imshow(x_hat[0,:,:].permute(1, 2, 0).detach().cpu().numpy(), cmap='gray')
+plt.imshow(x_hat[0, :, :].permute(1, 2, 0).detach().cpu().numpy(), cmap='gray')
 plt.xticks([])
 plt.yticks([])

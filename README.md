@@ -47,7 +47,7 @@ You can go to ``examples`` folder and run cells of the notebook ``demo_colibri.i
 
 ```python
 import matplotlib.pyplot as plt
-from colibri.data.datasets import Dataset
+from colibri.data.datasets_ import Dataset
 from torchvision.utils import make_grid
 
 # Load dataset
@@ -57,7 +57,7 @@ keys = ''
 batch_size = 128
 
 dataset = Dataset(dataset_path, keys, batch_size)
-adquistion_name = 'cassi' #  ['spc', 'cassi']
+adquistion_name = 'cassi'  # ['spc', 'cassi']
 
 # get samples
 
@@ -66,7 +66,7 @@ img = make_grid(sample[:32], nrow=8, padding=1, normalize=True, range=None, scal
 
 # visualize samples
 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10, 10))
 plt.imshow(img.permute(1, 2, 0))
 plt.title('CIFAR10 dataset')
 plt.axis('off')

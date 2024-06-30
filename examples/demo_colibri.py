@@ -23,16 +23,17 @@ where :math:`\mathcal{L}` is the loss function, :math:`\mathcal{R}` is the regul
 
 """
 
-
-
 # %%
 # Select Working Directory and Device
 # -----------------------------------------------
-import os 
-os.chdir(os.path.dirname(os.getcwd()))
-print("Current Working Directory " , os.getcwd())
+import os
 
-#General imports
+from torch.utils import data
+
+os.chdir(os.path.dirname(os.getcwd()))
+print("Current Working Directory ", os.getcwd())
+
+# General imports
 import matplotlib.pyplot as plt
 import torch
 import os
@@ -46,28 +47,33 @@ if manual_device:
 else:
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
 # %%
 # Load dataset
 # -----------------------------------------------
-from colibri.data.datasets import Dataset
+from colibri.data.datasets import CustomDataset
 
-dataset_path = 'cifar10'
-keys = ''
+name = 'cifar10'
+path = '.'
 batch_size = 128
-dataset = Dataset(dataset_path, keys, batch_size)
-adquistion_name = 'c_cassi' #  ['spc', 'cassi']
 
+builtin_dict = dict(train=True, download=True)
+dataset = CustomDataset(name, path,
+                        builtin_dict=builtin_dict,
+                        transform_dict=None)
+
+dataset_loader = data.DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+
+adquistion_name = 'c_cassi'  # ['spc', 'cassi']
 
 # %%
 # Visualize dataset
 # -----------------------------------------------
 from torchvision.utils import make_grid
 
-sample = next(iter(dataset.train_dataset))[0]
+sample = next(iter(dataset_loader))['input']
 img = make_grid(sample[:32], nrow=8, padding=1, normalize=True, scale_each=False, pad_value=0)
 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10, 10))
 plt.imshow(img.permute(1, 2, 0))
 plt.title('CIFAR10 dataset')
 plt.axis('off')
@@ -80,19 +86,18 @@ plt.show()
 # Each optics model can comptute the forward and backward operators i.e., :math:`\mathbf{y} = \mathbf{H}_\phi \mathbf{x}` and :math:`\mathbf{x} = \mathbf{H}^T_\phi \mathbf{y}`.
 
 
-
 import math
 from colibri.optics import SPC, SD_CASSI, DD_CASSI, C_CASSI
 
 img_size = sample.shape[1:]
 
 acquisition_config = dict(
-    input_shape = img_size,
+    input_shape=img_size,
 )
 
 if adquistion_name == 'spc':
-    n_measurements  = 256 
-    n_measurements_sqrt = int(math.sqrt(n_measurements))    
+    n_measurements = 256
+    n_measurements_sqrt = int(math.sqrt(n_measurements))
     acquisition_config['n_measurements'] = n_measurements
 
 acquisition_model = {
@@ -109,12 +114,11 @@ if adquistion_name == 'spc':
 
 img = make_grid(y[:32], nrow=8, padding=1, normalize=True, scale_each=False, pad_value=0)
 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10, 10))
 plt.imshow(img.permute(1, 2, 0))
 plt.axis('off')
 plt.title(f'{adquistion_name.upper()} measurements')
 plt.show()
-
 
 # %%
 # Reconstruction model
@@ -136,11 +140,10 @@ from colibri.regularizers import (
     KLGaussian,
 )
 
-
 network_config = dict(
     in_channels=sample.shape[1],
     out_channels=sample.shape[1],
-    reduce_spatial = True           # Only for Autoencoder
+    reduce_spatial=True  # Only for Autoencoder
 )
 
 recovery_model = build_network(Unet, **network_config)
@@ -164,7 +167,7 @@ regularizers_optics_mo_weights = [1e-3, 0.1]
 
 train_schedule = Training(
     model=model,
-    train_loader=dataset.train_dataset,
+    train_loader=dataset_loader,
     optimizer=optimizer,
     loss_func=losses,
     losses_weights=losses_weights,
@@ -184,7 +187,6 @@ results = train_schedule.fit(
     n_epochs=n_epochs, steps_per_epoch=steps_per_epoch, freq=frequency
 )
 
-
 # %%
 # Visualize results
 # -----------------------------------------------
@@ -196,12 +198,12 @@ y = acquisition_model(sample.to(device)).cpu()
 if adquistion_name == 'spc':
     y = y.reshape(y.shape[0], -1, n_measurements_sqrt, n_measurements_sqrt)
 
-img      = make_grid(sample[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
-img_est  = make_grid(x_est[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
-img_y    = make_grid(y[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
+img = make_grid(sample[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
+img_est = make_grid(x_est[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
+img_y = make_grid(y[:16], nrow=4, padding=1, normalize=True, scale_each=False, pad_value=0)
 
 imgs_dict = {
-    "CIFAR10 dataset": img, 
+    "CIFAR10 dataset": img,
     f"{adquistion_name.upper()} measurements": img_y,
     "Recons CIFAR10": img_est
 }
@@ -209,7 +211,7 @@ imgs_dict = {
 plt.figure(figsize=(14, 2.7))
 
 for i, (title, img) in enumerate(imgs_dict.items()):
-    plt.subplot(1, 4, i+1)
+    plt.subplot(1, 4, i + 1)
     plt.imshow(img.permute(1, 2, 0))
     plt.title(title)
     plt.axis('off')
